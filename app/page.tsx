@@ -8,6 +8,7 @@ import ExperimentFilters from '@/components/ExperimentFilters';
 import ExperimentDetail from '@/components/ExperimentDetail';
 import StatsCards from '@/components/StatsCards';
 import MetricsComparison from '@/components/MetricsComparison';
+import FOSInsights from '@/components/FOSInsights';
 import { Experiment, ExperimentFilters as FiltersType } from '@/types/experiment';
 import { Loader2, User, Globe } from 'lucide-react';
 
@@ -525,6 +526,9 @@ export default function Home() {
 
         {/* Metrics Comparison - only show for My Experiments tab */}
         {activeTab === 'my-experiments' && <MetricsComparison />}
+
+        {/* FOS Insights - only show for FOS 2026 tab */}
+        {activeTab === 'fos-2026' && <FOSInsights />}
 
         {/* Filters */}
         <ExperimentFilters
