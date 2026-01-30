@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import ExperimentCard from '@/components/ExperimentCard';
@@ -9,7 +9,7 @@ import ExperimentDetail from '@/components/ExperimentDetail';
 import StatsCards from '@/components/StatsCards';
 import MetricsComparison from '@/components/MetricsComparison';
 import { Experiment, ExperimentFilters as FiltersType } from '@/types/experiment';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User, Globe } from 'lucide-react';
 
 // Your actual experiments from Hivemind (fetched via MCP)
 const myExperiments: Experiment[] = [
@@ -181,8 +181,217 @@ const myExperiments: Experiment[] = [
   }
 ];
 
+// FOS (Front of Site) experiments from Hivemind - 2026
+const fosExperiments: Experiment[] = [
+  {
+    id: "am-fos-5722_pre_post",
+    name: "AM FOS 5722 Pre-Post Analysis",
+    metadata: {
+      business_unit: "Domain Registrars and Investors",
+      owners: ["amarek", "psadarangani"]
+    },
+    analysis_configuration: {
+      scorecard_template: "am-fos-v2"
+    },
+    experimentType: "PRE-POST",
+    startDate: "2025-12-03"
+  },
+  {
+    id: "am-fos-export-staging",
+    name: "AM FOS Export Staging",
+    metadata: {
+      business_unit: "Domain Registrars and Investors",
+      owners: ["amarek"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["gcr_amt"],
+      scorecard_template: "am-fos-v2"
+    },
+    experimentType: "A/B",
+    startDate: "2025-12-17"
+  },
+  {
+    id: "hcs_abn_gdexp_12143",
+    name: "HCS ABN GDEXP 12143 - FOS Navigation",
+    metadata: {
+      business_unit: "CMO",
+      owners: ["agelinas"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_conversion"],
+      scorecard_template: "fos-nav"
+    },
+    experiment_end_state: { result: "win" },
+    experimentType: "A/B",
+    startDate: "2025-12-16"
+  },
+  {
+    id: "hcs_abn_gdexp_12144",
+    name: "HCS ABN GDEXP 12144 - FOS Navigation",
+    metadata: {
+      business_unit: "CMO",
+      owners: ["agelinas"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_conversion"],
+      scorecard_template: "fos-nav"
+    },
+    experiment_end_state: { result: "inconclusive" },
+    experimentType: "A/B",
+    startDate: "2025-12-16"
+  },
+  {
+    id: "abn_gdexp_11767",
+    name: "ABN GDEXP 11767 - FOS Merch Domain",
+    metadata: {
+      business_unit: "Domain Registrars and Investors",
+      owners: ["cbradley1", "alyson0609"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_conversion"],
+      scorecard_template: "fos_merch_domain"
+    },
+    experiment_end_state: { result: "inconclusive" },
+    experimentType: "A/B",
+    startDate: "2025-12-10"
+  },
+  {
+    id: "abn_gdexp_11928",
+    name: "ABN GDEXP 11928 - FOS Merch Domain",
+    metadata: {
+      business_unit: "Domain Registrars and Investors",
+      owners: ["cbradley1", "alyson0609"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_conversion"],
+      scorecard_template: "fos_merch_domain"
+    },
+    experiment_end_state: { result: "inconclusive" },
+    experimentType: "A/B",
+    startDate: "2025-12-11"
+  },
+  {
+    id: "abn_gdexp_11891",
+    name: "ABN GDEXP 11891 - FOS Merch WAM",
+    metadata: {
+      business_unit: "Customer & Site",
+      owners: ["kblalock", "cbradley1"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_transaction"],
+      scorecard_template: "fos_merch_wam"
+    },
+    experiment_end_state: { result: "loss" },
+    experimentType: "A/B",
+    startDate: "2025-12-10"
+  },
+  {
+    id: "serp_precheck_multi_domain_en_us_mobile",
+    name: "SERP Precheck Multi Domain EN-US Mobile",
+    metadata: {
+      business_unit: "CMO",
+      owners: ["asahu1", "gwright1", "sparmar"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_conversion", "new_purchase_gcr_amt"],
+      scorecard_template: "dpp-e2e-precheck"
+    },
+    experimentType: "A/B",
+    startDate: "2025-12-04"
+  },
+  {
+    id: "serp_exactbadge_enmarkets_alldevices_non_mod_endgame",
+    name: "SERP Exact Badge EN Markets All Devices",
+    metadata: {
+      business_unit: "Customer & Site",
+      owners: ["kcheung", "jtrishuleshwar"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_gcr_amt"],
+      guardrail_metrics: ["new_purchase_conversion"],
+      scorecard_template: "dpp-e2e-lite"
+    },
+    experiment_end_state: { result: "win" },
+    experimentType: "ENDGAME",
+    startDate: "2025-10-13"
+  },
+  {
+    id: "serp_confetti_for_all_atcs_allmarkets_desktop_mod_and_non_mod",
+    name: "SERP Confetti for All ATCs - Desktop",
+    metadata: {
+      business_unit: "Customer & Site",
+      owners: ["kcheung", "jtrishuleshwar"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_gcr_amt"],
+      scorecard_template: "dpp-e2e"
+    },
+    experimentType: "A/B",
+    startDate: "2025-12-10"
+  },
+  {
+    id: "serp_cta_text_get_it_en_us_desktop_mod_and_non_mod_pre_post",
+    name: "SERP CTA Text 'Get It' EN-US Desktop Pre-Post",
+    metadata: {
+      business_unit: "Customer & Site",
+      owners: ["kcheung", "jtrishuleshwar"]
+    },
+    analysis_configuration: {
+      scorecard_template: "dpp-e2e"
+    },
+    experimentType: "PRE-POST",
+    startDate: "2025-12-30"
+  },
+  {
+    id: "cart_abandon_leadgen_intl",
+    name: "Cart Abandon Lead Gen - International",
+    metadata: {
+      business_unit: "CMO",
+      owners: ["mxdoty"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["sso_account_creation"],
+      scorecard_template: "cart"
+    },
+    experiment_end_state: { result: "win" },
+    experimentType: "A/B",
+    startDate: "2025-12-09"
+  },
+  {
+    id: "cart_discount_additional_m365",
+    name: "Cart Discount Additional M365",
+    metadata: {
+      business_unit: "CMO",
+      owners: ["mxdoty"]
+    },
+    analysis_configuration: {
+      decision_metrics: ["new_purchase_conversion", "new_o365_purchase_units"],
+      scorecard_template: "cart"
+    },
+    experiment_end_state: { result: "loss" },
+    experimentType: "A/B",
+    startDate: "2025-12-22"
+  },
+  {
+    id: "hp_recore_dify_leadgen_cta_pre_post",
+    name: "Homepage Recore Dify Lead Gen CTA Pre-Post",
+    metadata: {
+      business_unit: "CMO",
+      owners: ["mdelbrocco"]
+    },
+    analysis_configuration: {
+      scorecard_template: "recore_nba"
+    },
+    experiment_end_state: { result: "win" },
+    experimentType: "PRE-POST",
+    startDate: "2025-12-17"
+  }
+];
+
+type TabType = 'my-experiments' | 'fos-2026';
+
 export default function Home() {
-  const [experiments, setExperiments] = useState<Experiment[]>(myExperiments);
+  const [activeTab, setActiveTab] = useState<TabType>('my-experiments');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -193,20 +402,23 @@ export default function Home() {
     sortBy: 'name'
   });
 
+  // Get current experiments based on active tab
+  const currentExperiments = activeTab === 'my-experiments' ? myExperiments : fosExperiments;
+
   // Get unique business units
   const businessUnits = useMemo(() => {
     const units = new Set<string>();
-    experiments.forEach(exp => {
+    currentExperiments.forEach(exp => {
       if (exp.metadata?.business_unit) {
         units.add(exp.metadata.business_unit);
       }
     });
     return Array.from(units).sort();
-  }, [experiments]);
+  }, [currentExperiments]);
 
   // Filter and sort experiments
   const filteredExperiments = useMemo(() => {
-    let result = [...experiments];
+    let result = [...currentExperiments];
 
     // Search filter
     if (filters.search) {
@@ -245,11 +457,10 @@ export default function Home() {
     }
 
     return result;
-  }, [experiments, filters]);
+  }, [currentExperiments, filters]);
 
   const handleRefresh = async () => {
     setIsLoading(true);
-    // Simulate API call - in production, this would fetch from Hivemind
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
   };
@@ -259,20 +470,61 @@ export default function Home() {
     setIsDetailOpen(true);
   };
 
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    setFilters({ search: '', status: 'all', businessUnit: '', sortBy: 'name' });
+  };
+
   return (
     <div className="min-h-screen">
       <Header 
         onRefresh={handleRefresh} 
         isLoading={isLoading}
-        showcaseMonth="Your Experiments"
+        showcaseMonth={activeTab === 'my-experiments' ? 'Your Experiments' : 'FOS Experiments 2026'}
       />
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Stats */}
-        <StatsCards experiments={experiments} />
+        {/* Tab Navigation */}
+        <div className="flex gap-2 mb-8">
+          <button
+            onClick={() => handleTabChange('my-experiments')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium transition-all duration-200 ${
+              activeTab === 'my-experiments'
+                ? 'bg-gradient-to-r from-hive-500 to-hive-600 text-white shadow-lg shadow-hive-500/25'
+                : 'bg-gray-800/60 text-gray-400 hover:bg-gray-700/60 hover:text-gray-300'
+            }`}
+          >
+            <User className="w-4 h-4" />
+            My Experiments
+            <span className={`px-2 py-0.5 rounded-full text-xs ${
+              activeTab === 'my-experiments' ? 'bg-white/20' : 'bg-gray-700'
+            }`}>
+              {myExperiments.length}
+            </span>
+          </button>
+          <button
+            onClick={() => handleTabChange('fos-2026')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium transition-all duration-200 ${
+              activeTab === 'fos-2026'
+                ? 'bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25'
+                : 'bg-gray-800/60 text-gray-400 hover:bg-gray-700/60 hover:text-gray-300'
+            }`}
+          >
+            <Globe className="w-4 h-4" />
+            FOS 2026
+            <span className={`px-2 py-0.5 rounded-full text-xs ${
+              activeTab === 'fos-2026' ? 'bg-white/20' : 'bg-gray-700'
+            }`}>
+              {fosExperiments.length}
+            </span>
+          </button>
+        </div>
 
-        {/* Metrics Comparison */}
-        <MetricsComparison />
+        {/* Stats */}
+        <StatsCards experiments={currentExperiments} />
+
+        {/* Metrics Comparison - only show for My Experiments tab */}
+        {activeTab === 'my-experiments' && <MetricsComparison />}
 
         {/* Filters */}
         <ExperimentFilters
@@ -284,7 +536,7 @@ export default function Home() {
         {/* Results count */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-gray-500">
-            Showing <span className="text-white font-medium">{filteredExperiments.length}</span> of your experiments
+            Showing <span className="text-white font-medium">{filteredExperiments.length}</span> {activeTab === 'my-experiments' ? 'of your experiments' : 'FOS experiments'}
           </p>
         </div>
 
